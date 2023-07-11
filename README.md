@@ -8,11 +8,11 @@ The aim of this project is to foster a deep understanding of different forecasti
 ## In Progress && To-Do
 
 - [ ] **Implementations**
-	- [ ]  RNN Benchmark (Michael)
+	- [ ] RNN Benchmark (Michael)
 	  - [ ] Thoroughly read, and understand, paper
-    - [ ] Implement code in PyThon
-    - [ ] Take notes on results and assess overall approach
-    - [ ] Create `README.md` part
+   	  - [ ] Implement code in PyThon
+    	  - [ ] Take notes on results and assess overall approach
+    	  - [ ] Create `README.md` part               
 - [ ] **Putting it all together**
 	- [ ] Configure `README.md`
 		- [ ] Instructions to run locally	
