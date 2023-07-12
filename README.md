@@ -14,13 +14,13 @@ The aim of this project is to foster a deep understanding of different forecasti
     	  - [ ] Take notes on results and assess overall approach
     	  - [ ] Create `README.md` part               
 - [ ] **Putting it all together**
+	- [x] Find suitable LaTeX template (Michael)
 	- [ ] Configure `README.md`
 		- [ ] Instructions to run locally	
 		- [ ] Code explanation and overview
 	- [ ] Write report
-	- [ ] Write and prepare for presentation
 - [ ] **Time2Vec essay** 
-	- [ ] Find suitable LaTeX template (Michael)
-  - [ ] Note-taking and bibliography search
-  - [ ] Complete first draft
-  - [ ] Start improving
+	- [x] Find suitable LaTeX template (Michael)
+	- [ ] Note-taking and bibliography search
+	- [ ] Complete first draft
+	- [ ] Start improving
