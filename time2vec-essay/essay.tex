@@ -49,8 +49,45 @@
 \vspace{12pt}
 
 \begin{abstract}
-Time2Vec, as described in the paper by Borealis et al.\cite{time2vec}, offers a vector representation of time, aiming to capture the characteristics of time in machine learning models. However, it can be susceptible to misinterpretation in various domains. This essay tries to explore the potential pitfalls of Time2Vec, especially when juxtaposed against the transformer architecture.
+Time2Vec, as described in the paper by Borealis et al.\cite{time2vec}, offers a vector representation of time in machine learning models. However, it can be susceptible to misinterpretation in various domains. This is an attempt to explore the potential pitfalls of Time2Vec, especially when juxtaposed against the transformer architecture.
 \end{abstract}
+
+\section{Introduction}
+
+Time is a concept of an intricate and multifaceted nature. Within its vast expanse, one often encounters patterns. Some of these patterns are periodic, manifesting as predictable events like sales peaks during weekends or the rhythm of seasonal weather changes. On the other hand, there are non-periodic patterns, where certain events unfold unpredictably or become increasingly probable as time progresses. A prime example of this is how the risk of certain diseases can escalate with age.
+
+Recognising these complexities inherent to time, Borealis et al.\cite{time2vec} created Time2Vec, a representation model specifically crafted to encapsulate the duality and uniqueness of time-patterns. At the heart of Time2Vec are three foundational principles, as laid out by its authors. First is the inherent duality of time-patterns, emphasising the coexistence of both predictable and unpredictable events. Second, there's the principle of invariance to time-scaling, asserting that a genuine representation of time should be consistent, whether one is observes milliseconds or millennia. Lastly, the principle of model-compatibility stresses the importance of simplicity; the model should be able to integrate effortlessly with a wide array of other models, underscoring its broad relevance.
+
+Given time's distinct nature, especially when juxtaposed against other features, the emergence of a specialized representation like Time2Vec becomes not just valuable, but essential. Time2Vec's mathematical framework represents time through the following formulation
+
+\[
+t2v(\tau)[i] = 
+\begin{cases} 
+\omega_i \tau + \varphi_i, & \text{if } i = 0 \\
+\mathcal{F}(\omega_i \tau + \varphi_i), & \text{if } 1 \leq i \leq k,
+\end{cases}
+\]
+
+\noindent where \( t2v(\tau)[i] \) denotes the representation of time \( \tau \) for the \( i \)-th component, \( \omega_i \) represents a frequency term for the \( i \)-th component, \( \varphi_i \) signifies a phase term for the \( i \)-th component and \( \mathcal{F} \) is a periodic function encapsulating repeating patterns in time.
+
+In essence, this formula captures both linear and periodic patterns. The linear term addresses trends, while the periodic function captures recurring sequences in time, thereby producing a comprehensive time representation.
+
+
+\section{Incorporating Time2Vec in Predictive Modeling}
+
+Integrating the Time2Vec technique can drastically optimize models, enabling them to discern and learn from the subtle temporal patterns and overarching trends inherent in data. Incorporating Time2Vec in a predictive model roughly looks like the following:
+
+(add figure here)
+
+The initial phase involves \textbf{Time Embedding}. The main objective of this stage is to transform raw temporal data elements, such as timestamps, days, and hours, into intricate embeddings. To achieve this, the Time2Vec module is employed, ensuring the embeddings encapsulate both linear and cyclical time-related patterns.
+
+Following the embedding process is the \textbf{Model Integration} phase. Here, the aim is to cohesively integrate these time-based embeddings into predictive models. These embeddings are not isolated; they act as features and are integrated alongside other relevant data. Various models can harness these embeddings, from traditional neural networks to sophisticated architectures like recurrent neural networks (RNNs, including LSTM and GRU) and transformers.
+
+Once integration is achieved, the process transitions to \textbf{Prediction}. At this juncture, the model's task is to generate predictions by leveraging the time embeddings and other incorporated features. Depending on the nature of the data and the intended outcome, this phase can be bifurcated. For continuous outcomes such as stock prices or temperatures, the model embarks on regression tasks. Conversely, when data needs to be categorized into specific classes, like discerning between "faulty" and "not faulty" states in machinery maintenance datasets, classification tasks are the focal point.
+
+Post prediction, the process emphasizes \textbf{Training}. The cornerstone of this phase is to fine-tune the model. This is accomplished by juxtaposing the model's predictions against actual data values. The model's performance is quantified using specific loss functions. For regression-driven tasks, metrics like Mean Squared Error (MSE) or Mean Absolute Error (MAE) are apt, while classification-centric tasks predominantly rely on the Cross-Entropy Loss.
+
+Lastly, \textbf{Optimization} is performed. Here, the overarching goal is to augment both the model's accuracy and its operational efficiency. This is carried out using optimization methods such as SGD or Adam. A crucial aspect of this phase is the dual optimization of both the primary model's weights and the Time2Vec module's parameters. The intention is to fine-tune the system to capture relevant temporal patterns with even greater precision.
 
 \section{Strengths}
 
@@ -58,6 +95,12 @@ Time2Vec, as described in the paper by Borealis et al.\cite{time2vec}, offers a 
 \item Time2Vec's ability to encapsulate the progression, periodicity, and scale of time is of great interest. The representation, while being versatile across datasets, captures time's essence in a manner that's more sophisticated than mere timestamps.
 
 \item The transformer architecture, though originally crafted for NLP, has been employed in numerical timeseries classification, as seen in various articles (show articles). Time2Vec's potential as a positional encoding mechanism in such architectures underscores its versatility.
+
+    Rich Representation of Time: Time2Vec's main advantage lies in its ability to convert a simple timestamp into a multi-dimensional vector that captures both linear and periodic nuances of time. This is akin to how humans perceive time - not just as a point but in terms of day, week, month, and year.
+
+    Versatility Across Datasets: Instead of relying on handcrafted features that may vary between datasets, Time2Vec offers a systematic way to encode time, making it potentially adaptable across different time series datasets.
+
+    Enhancement of Existing Models: Time2Vec can be integrated with various machine learning models, including but not limited to transformers, LSTMs, and traditional regression models. By providing these models with a richer understanding of time, they can potentially make better predictions.
 \end{enumerate}
 
 \section{Concerns and Clarifications}
