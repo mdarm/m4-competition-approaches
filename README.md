@@ -10,9 +10,9 @@ The aim of this project is to foster a deep understanding of different forecasti
 - [ ] **Implementations**
 	- [ ] RNN Benchmark (Michael)
 		- [x] Thoroughly read, and understand, paper
-   	  	- [ ] Implement code in PyTorch
-    	  	- [ ] Take notes on results and assess overall approach
-    	  	- [ ] Create `README.md` part               
+		- [ ] Implement code in PyTorch
+		- [ ] Take notes on results and assess overall approach
+		- [ ] Create `README.md` part               
 - [ ] **Putting it all together**
 	- [x] Find suitable LaTeX template (Michael)
 	- [ ] Configure `README.md`
