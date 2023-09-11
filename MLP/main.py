@@ -29,7 +29,7 @@ def main():
         train_df=train_df, val_df=val_df, test_df=test_df,
         label_columns=[target_label])
     print(single_step_window)
-    # Single layer model
+    # Multi-layer model
     MAX_EPOCHS = 20
     dense = tf.keras.Sequential([
         tf.keras.layers.Dense(units=64, activation='relu'),
