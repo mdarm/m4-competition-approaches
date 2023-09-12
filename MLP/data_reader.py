@@ -1,38 +1,41 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
+from statsmodels.regression.linear_model import OLS
 
-def get_data():
+def get_data(dataset):
     # Load the training and testing data
-    train_data = pd.read_csv('Hourly-test.csv').drop(columns='V1').dropna(how='any')
-    test_data = pd.read_csv('Hourly-train.csv').drop(columns='V1').dropna(how='any')
+    train_data = pd.read_csv(f'{dataset}-train.csv').drop(columns='V1')
+    test_data = pd.read_csv(f'{dataset}-test.csv').drop(columns='V1')
 
-    # Rename the columns using the 'rename' method and a dictionary
-    # new_column_names = [str(i) for i in range(1, 49)]
-    # train_data = train_data.rename(columns=dict(zip(df.columns, new_column_names)))
-    # test_data = test_data.rename(columns=dict(zip(test_data.columns, new_column_names)))
+    # Fill missing values with the mean of the it's column.
+    train_data.fillna(train_data.mean(), inplace=True)
+    test_data.fillna(test_data.mean(), inplace=True)
 
-    # Split the train_data into training and validation sets
-    train_ratio = 0.8
-    validation_ratio = 0.2
-    X_train, X_val = train_test_split(train_data, test_size=validation_ratio, random_state=42)
+    # remove trend and seasonality
+    train_data = preprocess_time_series(train_data)
+    test_data = preprocess_time_series(test_data)
 
-    # Extract the time column and the multi-dimensional data
-    # X_train = train_data.iloc[:, 1:].values
-    # X_test = test_data.iloc[:, 1:].values
-    # X_train_t = np.arange(len(train_data.iloc[:, 0]))
-    # X_test_t = np.arange(len(test_data.iloc[:, 0]))
+    # Drop rows with NaN values (they might appear after detrending)
+    train_data = train_data.dropna(how='all')
+    test_data = test_data.dropna(how='all')
 
-    # Normalize the data
-    scaler_tr = MinMaxScaler()
-    scaler_ts = MinMaxScaler()
-    X_train = scaler_tr.fit_transform(X_train)
-    X_val = scaler_tr.transform(X_val)
-    X_test = scaler_ts.fit_transform(test_data)
+    return train_data, test_data
 
-    # Convert the NumPy arrays back to Pandas DataFrames
-    train_df = pd.DataFrame(X_train, columns=train_data.columns)
-    val_df = pd.DataFrame(X_val, columns=train_data.columns)
-    test_df = pd.DataFrame(X_test, columns=test_data.columns)
+def preprocess_time_series(data):
+    # Let's remove trend and Seasonality.
+    feature_names = data.columns.tolist()
+    for feature in feature_names:
+        # Removing Trend with OLS
+        least_squares = OLS(data[feature].values, list(range(data.shape[0])))
+        result = least_squares.fit()
+        fit = pd.Series(result.predict(list(range(data.shape[0]))), index=data.index)
+        data_ols_detrended = data[feature] - fit
+        # Removing Seasonality by Differencing Over Linear Regression Transformed Time-Series
+        data_detrended_diff = data_ols_detrended - data_ols_detrended.shift()
+        # Saving
+        data[feature] = data_detrended_diff
+    # Drop rows with NaN values
+    data = data.dropna(how='all')
 
-    return train_df, val_df, test_df
+    return data
