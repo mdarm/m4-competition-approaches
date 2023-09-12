@@ -1,20 +1,12 @@
+
+import numpy as np
+import tensorflow as tf
+from matplotlib import pyplot as plt
+
 class WindowGenerator():
-    """
-    Initialize a WindowGenerator for time series data.
-
-    Args:
-        input_width (int): Width of the input window.
-        label_width (int): Width of the label window.
-        shift (int): Number of time steps to shift the label window.
-        train_df (pd.DataFrame): Training data DataFrame.
-        val_df (pd.DataFrame): Validation data DataFrame.
-        test_df (pd.DataFrame): Test data DataFrame.
-        label_columns (list): List of column names to be used as labels.
-    """
-
     def __init__(self, input_width, label_width, shift,
-                train_df=train_df, val_df=val_df, test_df=test_df,
-                label_columns=None):
+                 train_df, val_df, test_df,
+                 label_columns=None):
         # Store the raw data.
         self.train_df = train_df
         self.val_df = val_df
@@ -24,9 +16,9 @@ class WindowGenerator():
         self.label_columns = label_columns
         if label_columns is not None:
             self.label_columns_indices = {name: i for i, name in
-                                        enumerate(label_columns)}
+                                          enumerate(label_columns)}
         self.column_indices = {name: i for i, name in
-                                enumerate(train_df.columns)}
+                               enumerate(train_df.columns)}
 
         # Work out the window parameters.
         self.input_width = input_width
@@ -49,17 +41,13 @@ class WindowGenerator():
             f'Input indices: {self.input_indices}',
             f'Label indices: {self.label_indices}',
             f'Label column name(s): {self.label_columns}'])
-    
+
 
     def split_window(self, features):
         """
-        Split features into input and label windows.
-
-        Args:
-            features (tf.Tensor): Input features.
-
-        Returns:
-            Tuple of input and label tensors.
+        Given a list of consecutive inputs, the split_window
+        method will convert them to a window of inputs and a
+        window of labels.
         """
         inputs = features[:, self.input_slice, :]
         labels = features[:, self.labels_slice, :]
@@ -76,24 +64,16 @@ class WindowGenerator():
         return inputs, labels
 
 
-    def plot(self, model=None, plot_col='V49', max_subplots=3):
-        """
-        Plot input, labels, and predictions.
-
-        Args:
-            model (tf.keras.Model): Optional model for generating predictions.
-            plot_col (str): Column name to plot.
-            max_subplots (int): Maximum number of subplots to display.
-        """
+    def plot(self, plot_col, model=None, max_subplots=3):
         inputs, labels = self.example
         plt.figure(figsize=(12, 8))
         plot_col_index = self.column_indices[plot_col]
         max_n = min(max_subplots, len(inputs))
         for n in range(max_n):
-            plt.subplot(max_n, 1, n+1)
-            plt.ylabel(f'{plot_col} [normed]')
+            plt.subplot(max_n, 1, n + 1)
+            plt.ylabel(f'{plot_col}')
             plt.plot(self.input_indices, inputs[n, :, plot_col_index],
-                    label='Inputs', marker='.', zorder=-10)
+                     label='Inputs', marker='.', zorder=-10)
 
             if self.label_columns:
                 label_col_index = self.label_columns_indices.get(plot_col, None)
@@ -115,17 +95,14 @@ class WindowGenerator():
                 plt.legend()
 
         plt.xlabel('Time [h]')
+        plt.show()
 
 
     def make_dataset(self, data):
         """
-        Create a tf.data.Dataset from a time series DataFrame.
-
-        Args:
-            data (pd.DataFrame): Time series data.
-
-        Returns:
-            tf.data.Dataset: Dataset of (input_window, label_window) pairs.
+        This method will take a time series DataFrame and convert
+        it to a tf.data.Dataset of (input_window, label_window) pairs using the
+        tf.keras.utils.timeseries_dataset_from_array function.
         """
         data = np.array(data, dtype=np.float32)
         ds = tf.keras.utils.timeseries_dataset_from_array(
@@ -134,7 +111,7 @@ class WindowGenerator():
             sequence_length=self.total_window_size,
             sequence_stride=1,
             shuffle=True,
-            batch_size=32,)
+            batch_size=32, )
 
         ds = ds.map(self.split_window)
 
