@@ -1,3 +1,14 @@
+"""
+Author: Christou Nektarios
+Date: September 15, 2023
+Description: This Python script implements a basic Multi-Layer Perceptron (MLP) for time
+             series forecasting. It is designed to be versatile and can be used for various
+             time intervals, including yearly, quarterly, monthly, daily, or hourly datasets,
+             such as those used in the M4 competition. The design of the MLP is intentionally
+             kept simple for ease of understanding and modification. For educational purposes.
+"""
+
+
 import warnings
 import pandas as pd
 import numpy as np
@@ -35,8 +46,8 @@ def main():
     # params
     scaler = StandardScaler()       # change to MinMaxScaler if you want
     frequency = 'Hourly'            # choose which timeseries to load
-    offset = 1                      # offset between input window and horizon
-    max_epochs = 5                  # max epochs of MLP during training
+    offset = 1                      # offset between consecutive input sequences
+    max_epochs = 5                  # max epochs of MLP training
 
 
 
@@ -51,7 +62,6 @@ def main():
         # do not inherit significant trend
         # or seasonality to bother with.
         dataset = detrend_deseason(dataset)
-        pass
     X_train = pd.DataFrame(scaler.fit_transform(dataset), columns=dataset.columns)  # scale data
     X_train, y_train = generate_inputs_and_targets(dataset=X_train,
                                                    window_size=CONV_WIDTH[frequency],
