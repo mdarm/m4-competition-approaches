@@ -329,38 +329,42 @@ def plot_predictions(model, y_val, val_dataset, series_index=0):
 
 
 def time2vec(dataset, frequency):
+    """
+    Add one-hot encoded columns for days of the week to a time series dataset.
+    Other frequencies are not supported yet.
+    
+    Parameters:
+    - dataset (pd.DataFrame): The time series dataset to modify.
+    - frequency (str): The frequency of the time series data ('Hourly', 'Daily', etc.).
+
+    Returns:
+    - dataset (pd.DataFrame): The modified time series dataset with one-hot encoded day columns.
+    """
     if frequency == 'Hourly':
-        # Add a column with one-hot encodings of days,
-        # assuming that the first record starts from Monday.
-        # Comment out this part if you're using yearly or hourly dataset.
+        # Define one-hot encodings for days of the week (starting from Monday)
         encodings = [
-            [1, 0, 0, 0, 0, 0 ,0], # monday
-            [0, 1, 0, 0, 0, 0, 0], # tuesday
-            [0, 0, 1 ,0, 0, 0, 0], # wednesday
-            [0, 0 ,0, 1 ,0 ,0, 0], # thursday
-            [0, 0, 0, 0 ,1, 0, 0], # friday
-            [0, 0, 0, 0, 0, 1, 0], # saturday
-            [0, 0 ,0, 0, 0, 0, 1]  # sunday
+            [1, 0, 0, 0, 0, 0, 0],  # Monday
+            [0, 1, 0, 0, 0, 0, 0],  # Tuesday
+            [0, 0, 1, 0, 0, 0, 0],  # Wednesday
+            [0, 0, 0, 1, 0, 0, 0],  # Thursday
+            [0, 0, 0, 0, 1, 0, 0],  # Friday
+            [0, 0, 0, 0, 0, 1, 0],  # Saturday
+            [0, 0, 0, 0, 0, 0, 1]   # Sunday
         ]
         encodings_cycle = cycle(encodings)
         new_columns = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
-        # training set:
-        # add new columns
+
+        # Add new columns for one-hot encoding
         for column_name in reversed(new_columns):
-            X_train.insert(0, column_name, 0)
-        # replace the new columns values with the encodings
-        for index, row in X_train.iterrows():
+            dataset.insert(0, column_name, 0)
+
+        # Replace the new columns' values with the encodings
+        for index, row in dataset.iterrows():
             encoding = next(encodings_cycle)
-            X_train.loc[index, X_train.columns[:7]] = encoding
-        # test set:
-        # add new columns
-        encodings_cycle = cycle(encodings)
-        for column_name in reversed(new_columns):
-            X_test.insert(0, column_name, 0)
-        # replace the new columns values with the encodings
-        for index, row in X_test.iterrows():
-            encoding = next(encodings_cycle)
-            X_test.loc[index, X_test.columns[:7]] = encoding
+            dataset.loc[index, dataset.columns[:7]] = encoding
+
+    return dataset
+
 
 
 if __name__ == '__main__':
