@@ -1,5 +1,8 @@
 #
-This implementation primarily serves educational purposes and is crafted for global forecasting of the M4 dataset. Our approach involves the utilization of one-hot vector representations for each day and the construction of a deep MLP comprising two hidden layers. For comprehensive data preparation, we meticulously applied detrending, deseasonalizing, and standardization techniques. To efficiently manipulate input/target windows, we deployed a custom WindowGenerator class for batch generation across training, evaluation, and test datasets. Notably, our model is specifically designed to facilitate multi-step window forecasting for single-point predictions, offering a valuable educational tool for exploring timeseries analysis within the context of the M4 dataset.
+The method employs a Multi-Layer Perceptron (MLP) architecture for time series forecasting, with a specific emphasis on datasets commonly encountered in the M4 competition. It begins by preparing the data, which involves filling missing values, removing trends, and deseasoning the time series to make it suitable for forecasting. The dataset is then split into training and validation sets.
 
-Sources used: 
-* https://www.tensorflow.org/tutorials/structured_data/time_series
+The MLP model is constructed with three layers: an input layer, two hidden layers, and an output layer. The number of input units depends on the chosen time interval, and the output units are determined by the desired prediction horizon. The model is trained using the mean squared error (MSE) loss function and the Adam optimizer. To prevent overfitting, early stopping is applied with a specified patience parameter.
+
+After training, the model's performance is evaluated on the validation dataset using both MSE and the mean absolute error (MAE). Additionally, the script allows for visualizing the model's predictions compared to the true values for a selected time series, aiding in assessing its forecasting accuracy.
+
+For educational purposes.
