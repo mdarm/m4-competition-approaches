@@ -42,7 +42,6 @@ CONV_WIDTH = {
 
 
 def main():
-
     # params
     scaler = StandardScaler()       # change to MinMaxScaler if you want
     frequency = 'Hourly'            # choose which timeseries to load
@@ -332,7 +331,7 @@ def time2vec(dataset, frequency):
     """
     Add one-hot encoded columns for days of the week to a time series dataset.
     Other frequencies are not supported yet.
-    
+
     Parameters:
     - dataset (pd.DataFrame): The time series dataset to modify.
     - frequency (str): The frequency of the time series data ('Hourly', 'Daily', etc.).
@@ -366,7 +365,5 @@ def time2vec(dataset, frequency):
     return dataset
 
 
-
 if __name__ == '__main__':
     main()
-
