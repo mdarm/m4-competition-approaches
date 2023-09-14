@@ -95,7 +95,6 @@ def get_dataset(frequency):
     Returns:
     - dataset (pd.DataFrame): The preprocessed time series dataset.
     """
-
     train_data = pd.read_csv(f'{frequency}-train.csv').drop(columns='V1')
     test_data = pd.read_csv(f'{frequency}-test.csv').drop(columns='V1')
     # Fill missing values with the mean of its column.
@@ -124,7 +123,6 @@ def detrend_deseason(data):
     Returns:
     - detrended_data (pd.DataFrame): The detrended and deseasoned time series data.
     """
-
     # Get the list of feature names from the input DataFrame
     feature_names = data.columns.tolist()
     # Iterate through each feature and remove trend and seasonality
@@ -216,6 +214,7 @@ def make_tf_dataset(X, y, batch_size=32):
     Returns:
     - tf_dataset (tf.data.Dataset): TensorFlow dataset containing input sequences and target values.
     """
+
     tf_dataset = tf.data.Dataset.from_tensor_slices((X, y)).batch(batch_size)
 
     return tf_dataset
@@ -289,6 +288,7 @@ def evaluate_model(model, validation_data):
     Returns:
     - None
     """
+
     # Evaluate the model
     test_loss, test_mae = model.evaluate(validation_data)
 
