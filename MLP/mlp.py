@@ -33,11 +33,11 @@ HORIZON = {
 CONV_WIDTH = {
     # Input width of MLP (adjust as needed. Taking seasonality into
     # account could be a good approach.)
-    'Yearly': 6,
-    'Quarterly': 8,
-    'Monthly': 18,
-    'Daily': 14,
-    'Hourly': 24
+    'Yearly': 8,
+    'Quarterly': 10,
+    'Monthly': 28,
+    'Daily': 18,
+    'Hourly': 16
 }
 
 
