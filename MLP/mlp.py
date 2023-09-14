@@ -78,7 +78,11 @@ def main():
                               max_epochs=max_epochs,
                               patience=2)
     _ = evaluate_model(model=model, validation_data=tf_val)
-    _ = plot_predictions(series_index=0, model=model, y_val=y_val, val_dataset=tf_val)
+    _ = plot_predictions(series_index=0,
+                         model=model,
+                         y_val=y_val,
+                         X_val=X_val,
+                         horizon=HORIZON[frequency])
 
 
 def get_dataset(frequency):
@@ -292,7 +296,7 @@ def evaluate_model(model, validation_data):
     print(f'Test Loss: {test_loss}, Test MAE: {test_mae}')
 
 
-def plot_predictions(model, y_val, val_dataset, series_index=0):
+def plot_predictions(model, y_val, X_val, horizon, series_index=0):
     """
     Plot the true vs. predicted values for a selected time series using a trained model.
 
@@ -306,22 +310,29 @@ def plot_predictions(model, y_val, val_dataset, series_index=0):
     - None
     """
     # Make predictions on the validation dataset
-    y_pred = model.predict(val_dataset)
+    y_pred = model.predict(X_val)
 
     # Extract the true values and predicted values for the selected time series
-    true_values = y_val[:, series_index]
-    predicted_values = y_pred[:, series_index]
+    true_values = y_val[:, series_index][-horizon:]
+    predicted_values = y_pred[:, series_index][-horizon:]
 
     # Create timestamps for the x-axis
-    timestamps = np.arange(len(true_values))
+    timestamps = np.arange(true_values.shape[0])    #np.arange(len(true_values))
 
-    # Plot the true vs. predicted values
+    # Plot the true vs. predicted values with dashed lines connecting each pair of points
     plt.figure(figsize=(12, 6))
-    plt.plot(timestamps, true_values, label='True Values', marker='o', markersize=1.5, linestyle='None')
-    plt.plot(timestamps, predicted_values, label='Predicted Values', marker='x', markersize=1.5, linestyle='None')
-    plt.title('Time Series Forecasting Results')
+    plt.plot(timestamps, true_values, label='True Values', marker='o', markersize=4, linestyle='None', color='blue')
+    plt.plot(timestamps, predicted_values, label='Predicted Values', marker='x', markersize=4, linestyle='None',
+             color='red')
+    plt.title('Time Series Forecasting Results on M4 test set')
     plt.xlabel('Timestamp')
-    plt.ylabel('Value')
+    plt.ylabel('Value (scaled)')
+
+    # Connect each pair of points with dashed lines
+    for i in range(len(timestamps)):
+        plt.plot([timestamps[i], timestamps[i]], [true_values[i], predicted_values[i]], color='green', linestyle='--',
+                 linewidth=1)
+
     plt.legend()
     plt.grid(True)
     plt.show()
