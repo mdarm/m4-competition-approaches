@@ -18,9 +18,9 @@ The original intention was to reproduce the complete ES-RNN algorithm, and its p
 - blender module to merge predictions from multiple series
 - quantile loss to get prediction intervals
 - Slawek's loss function that optimises two losses: quantile loss + regularization
-$$
-L_q(y, \hat{y}) = q(y - \hat{y} )_{+} + (1- q) ( \hat{y} - y)_{+}
-$$
+```math
+ L_q(y, \hat{y}) = q(y - \hat{y} )_{+} + (1- q) ( \hat{y} - y)_{+}
+```
 - compare performance on benchmark dataset
 
 
