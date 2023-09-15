@@ -9,6 +9,7 @@ from models import ESRNN
 from utils import SequenceLabelingDataset, process_and_split_data
 from evaluation_metrics import *
 
+
 def h1_run():
     h1_train, h1_test = process_and_split_data("../data/Hourly-train.csv",
                                                "../data/Hourly-test.csv", 'H1')
