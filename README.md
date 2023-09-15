@@ -1,13 +1,12 @@
 # M4 Competition Approaches
 
-
-This repository hosts a comprehensive project focused on implementing and comparing various methodologies utilised in the [M4 Forecasting Competition](https://www.sciencedirect.com/science/article/pii/S0169207019301128). On top of that, an [essay](time2vec-essay/time2vec.pdf) assessing the publication titled [Time2Vec: Learning a Vector Representation of Time](arXiv:1907.05321) has also been written.
+In this repository, we present a detailed project that delves into the implementation and comparison of various methodologies from the [M4 Forecasting Competition](https://www.sciencedirect.com/science/article/pii/S0169207019301128). Additionally, we have authored an [essay](time2vec-essay/time2vec.pdf) evaluating the publication [Time2Vec: Learning a Vector Representation of Time](https://arxiv.org/abs/1907.05321)
 
 The project was carried out as a key part of the curriculum for the 'DI503 - Time Series Analysis and Applications' course, taught at the National and Kapodistrian University of Athens (NKUA) during the Spring term of 2023. 
 
 ## Objective
 
-The aim of this project is to develop a deep understanding of different forecasting models and strategies, as well as their practical applications, by drawing on results from the M4 Competition. Our comparison framework aims to provide clarity on the strengths and weaknesses of each approach, ultimately serving as a useful resource for future reference.
+The aim of this project was to develop a deep understanding of different forecasting models and strategies, as well as their practical applications, by drawing on results from the M4 Competition. Our comparison framework aims to provide clarity on the strengths and weaknesses of each approach, ultimately serving as a useful resource for future reference.
 
 
 ## Project Structure
@@ -55,8 +54,10 @@ A high-level overview of the dataset is shown in the following table; while the 
 | Hourly                                         | 0     | 0        | 0     | 0       | 0           | 414   | 414   |
 | Total                                          | 25,121| 18,798   | 19,402| 24,534  | 8,708       | 3,437 | 100,000|
 
+
 ### Assessment
 For a detailed assessment of methodology and criteria, you can refer to our [report](report/IEEEtran_HOWTO.pdf).
+
 
 ## Built With
 
