@@ -9,14 +9,18 @@ This repo contains:
 
 ## Differences between Slawek's version and this one
 
-The original intention was to reproduce the complete ES-RNN algorithm, and its prediction results, on the entirety of the M4-competition dataset. I still have a way to go. What I have not yet implemented are the following
+The original intention was to reproduce the complete ES-RNN algorithm, and its prediction results, on the entirety of the M4-competition dataset. I still have a long way to go. What I have not yet implemented, and I would certainly like to, are the following
 
 - 3d Holt-Winters implementation (that is, multiple series processing in one step)
 - multi-series-model with shared trend LSTM
 - additive time-series-reconstruction
-- autoregressive learner.
+- autoregressive learner
 - blender module to merge predictions from multiple series
-- quantile loss to get prediction intervals.
+- quantile loss to get prediction intervals
+- Slawek's loss function that optimises two losses: quantile loss + regularization
+$$
+L_q(y, \hat{y}) = q(y - \hat{y} )_{+} + (1- q) ( \hat{y} - y)_{+}
+$$
 - compare performance on benchmark dataset
 
 
