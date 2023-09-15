@@ -46,7 +46,7 @@ def main():
     scaler = StandardScaler()       # change to MinMaxScaler if you want
     frequency = 'Hourly'            # choose which timeseries to load
     offset = 1                      # offset between consecutive input sequences
-    max_epochs = 5                  # max epochs of MLP training
+    max_epochs = 10                  # max epochs of MLP training
 
 
 
@@ -69,14 +69,12 @@ def main():
     X_train, y_train, X_val, y_val = split_data(X=X_train, y=y_train)
     tf_train = make_tf_dataset(X=X_train, y=y_train)  # tf = tensorflow
     tf_val = make_tf_dataset(X=X_val, y=y_val)
-    model = build_model(input_shape=CONV_WIDTH[frequency],
-                         output_shape=HORIZON[frequency],
-                         max_epochs=3)
+    model = build_model(input_shape=CONV_WIDTH[frequency], output_shape=HORIZON[frequency])
     history = compile_and_fit(model=model,
                               train_data=tf_train,
                               val_data=tf_val,
                               max_epochs=max_epochs,
-                              patience=2)
+                              patience=1)
     _ = evaluate_model(model=model, validation_data=tf_val)
     _ = plot_predictions(series_index=0,
                          model=model,
@@ -220,14 +218,13 @@ def make_tf_dataset(X, y, batch_size=32):
     return tf_dataset
 
 
-def build_model(input_shape, output_shape, max_epochs=5):
+def build_model(input_shape, output_shape):
     """
     Build an MLP (Multilayer Perceptron) model for time series forecasting.
 
     Parameters:
     - input_shape (int): The number of input units.
     - output_shape (int): The number of output units.
-    - max_epochs (int): Maximum number of training epochs (default is 5).
 
     Returns:
     - model (tf.keras.Model): The constructed MLP model.
@@ -242,7 +239,7 @@ def build_model(input_shape, output_shape, max_epochs=5):
     return model
 
 
-def compile_and_fit(model, train_data, val_data, max_epochs, patience=2):
+def compile_and_fit(model, train_data, val_data, max_epochs, patience=1):
     """
     Compile and train a TensorFlow model with early stopping based on validation loss.
 
@@ -263,6 +260,7 @@ def compile_and_fit(model, train_data, val_data, max_epochs, patience=2):
         mode='min'
     )
 
+    print('\nTraining:')
     # Compile the model
     model.compile(optimizer='adam', loss='mse', metrics=['mae'])
 
@@ -277,9 +275,29 @@ def compile_and_fit(model, train_data, val_data, max_epochs, patience=2):
     return history
 
 
+def calculate_owa(mse, mae, weights):
+    """
+    Calculate the Overall Weighted Average (OWA) metric based on MSE, MAE, and specified weights.
+
+    Parameters:
+    - mse (float): Mean Squared Error (MSE).
+    - mae (float): Mean Absolute Error (MAE).
+    - weights (dict): Dictionary containing weights for MSE and MAE components.
+
+    Returns:
+    - owa (float): Overall Weighted Average (OWA) metric.
+    """
+    mse_weight = weights['mse']
+    mae_weight = weights['mae']
+
+    owa = mse_weight * mse + mae_weight * mae
+
+    return owa
+
+
 def evaluate_model(model, validation_data):
     """
-    Evaluate a trained TensorFlow model using validation data and print the test loss and MAE.
+    Evaluate a trained TensorFlow model using validation data and print the test loss, MAE, and OWA.
 
     Parameters:
     - model (tf.keras.Model): The trained TensorFlow model to evaluate.
@@ -288,12 +306,16 @@ def evaluate_model(model, validation_data):
     Returns:
     - None
     """
-
     # Evaluate the model
+    print('\nEvaluating:')
     test_loss, test_mae = model.evaluate(validation_data)
 
+    # Calculate OWA (Specify your desired weights)
+    owa_weights = {'mse': 0.7, 'mae': 0.3}  # Adjust weights as needed
+    owa = calculate_owa(test_loss, test_mae, owa_weights)
+
     # Print evaluation results
-    print(f'Test Loss: {test_loss}, Test MAE: {test_mae}')
+    print(f'Test Loss: {test_loss}, Test MAE: {test_mae}, OWA: {owa}')
 
 
 def plot_predictions(model, y_val, X_val, horizon, series_index=0):
