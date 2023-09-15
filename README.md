@@ -23,12 +23,12 @@ $PROJECT_ROOT
 +-- es-rnn 
 ¦   # Forecasting using Exponential Smoothing and Recurrent Neural Networks
 ¦
++-- report
+¦   # Comprehensive report detailing implementaions, results, and conclusions
+¦
 +-- statistical-methods 
 ¦   # Forecasting using traditional statistical  methods
 ¦   # (Naïve 1,2 & S and ARIMA)
-¦
-+-- report
-¦   # Comprehensive report detailing implementaions, results, and conclusions
 ¦
 +-- time2vec-essay
     # Detailed essay on "Time2Vec: Learning a Vector Representation of Time" concept
