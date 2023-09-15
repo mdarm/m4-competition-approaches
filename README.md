@@ -56,7 +56,7 @@ A high-level overview of the dataset is shown in the following table; while the 
 
 
 ### Assessment
-For a detailed assessment of methodology and criteria, you can refer to our [report](report/IEEEtran_HOWTO.pdf).
+For a detailed assessment of methodology and criteria, you can refer to our [report](report/report.pdf).
 
 
 ## Built With
@@ -94,7 +94,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 		- [x] Instructions to run locally	
 		- [x] Code explanation and overview
 		- [x] Thorough outline of contents
-	- [ ] Write report
+	- [x] Write report
 - [x] **Time2Vec essay** 
 	- [x] Find suitable LaTeX template (Michael)
 	- [x] Note-taking and bibliography search
