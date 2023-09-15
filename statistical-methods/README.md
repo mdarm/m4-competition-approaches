@@ -6,9 +6,10 @@ The notebook contains implementations of the following purely statistical method
 - Naive 2
 - Arima
 
-## Differences between Slawek's version and this one
+## Method description
 
-The original intention was to reproduce the complete ES-RNN algorithm, and its prediction results, on the entirety of the M4-competition dataset. I still have a way to go. What I have not yet implemented are the following
+Naive 1: simply picks the last value of the training set, replicates it, forming a horizontal line.
+Naive 2: picks the last $S$ values of the training set and replicates it
 
 - 3d Holt-Winters implementation (that is, multiple series processing in one step)
 - multi-series-model with shared trend LSTM
