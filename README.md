@@ -77,26 +77,3 @@ For a detailed assessment of methodology and criteria, you can refer to our [rep
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
-
-
----
-## In Progress && To-Do
-
-- [x] **Implementations**
-	- [x] RNN Benchmark (Michael)
-		- [x] Thoroughly read, and understand, paper
-		- [x] Implement code in PyTorch
-		- [x] Take notes on results and assess overall approach
-		- [x] Create `README.md` part               
-- [x] **Putting it all together**
-	- [x] Find suitable LaTeX template (Michael)
-	- [x] Configure `README.md`
-		- [x] Instructions to run locally	
-		- [x] Code explanation and overview
-		- [x] Thorough outline of contents
-	- [x] Write report
-- [x] **Time2Vec essay** 
-	- [x] Find suitable LaTeX template (Michael)
-	- [x] Note-taking and bibliography search
-	- [x] Complete first draft
-	- [x] Start improving
