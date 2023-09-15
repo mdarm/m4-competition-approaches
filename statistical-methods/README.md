@@ -25,4 +25,4 @@ The notebook contains implementations of the following purely statistical method
 - numpy
 - pandas
 - matplotlib
-= statsmodels
+- statsmodels
