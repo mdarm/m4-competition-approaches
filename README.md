@@ -62,7 +62,8 @@ For a detailed assessment of methodology and criteria, you can refer to our [rep
 ## Built With
 
 * [Python](https://www.python.org) - The *data science* language
-* [PyTorch](https://www.pytorch.org/) - The dynamic framework for computation
+ * [Jupyter](https://jupyter.org/) - An interactive development environment for notebooks
+* [PyTorch](https://www.pytorch.org/) - A dynamic framework for computation
 * [Keras](https://keras.io/) - Not PyTorch ;)
 
 
