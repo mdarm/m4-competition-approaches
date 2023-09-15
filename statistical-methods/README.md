@@ -9,6 +9,7 @@ The notebook contains implementations of the following purely statistical method
 ## Method description
 
 Naive 1: simply picks the last value of the training set, replicates it, forming a horizontal line.
+
 Naive 2: picks the last $S$ values of the training set and replicates it
 
 - 3d Holt-Winters implementation (that is, multiple series processing in one step)
