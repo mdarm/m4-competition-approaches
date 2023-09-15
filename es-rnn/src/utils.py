@@ -38,7 +38,7 @@ def process_and_split_data(train_file, test_file, label):
 
 class SequenceLabelingDataset(Dataset):
     
-    def __init__(self, input_data, max_size=100, sequence_labeling=True, seasonality=12, out_preds=12):
+    def __init__(self, input_data, max_size=100, sequence_labeling=True, seasonality=24, out_preds=48):
         self.data = input_data
         self.max_size = max_size
         self.sequence_labeling = sequence_labeling

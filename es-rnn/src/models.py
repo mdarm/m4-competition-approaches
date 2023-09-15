@@ -5,7 +5,7 @@ import torch.nn as nn
 
 class HoltWintersNoTrend(nn.Module):
     
-    def __init__(self, init_a=0.1, init_g=0.1, slen=12):
+    def __init__(self, init_a=0.1, init_g=0.1, slen=24):
         super(HoltWintersNoTrend, self).__init__()
         
         # Smoothing parameters
@@ -21,7 +21,7 @@ class HoltWintersNoTrend(nn.Module):
         # Sigmoid used to normalize the parameters to be between 0 and 1 if needed
         self.sig = nn.Sigmoid()
         
-    def forward(self, series, series_shifts, n_preds=8, rv=False):
+    def forward(self, series, series_shifts, n_preds=48, rv=False):
         batch_size = series.shape[0]
         init_season_batch = self.init_season.repeat(batch_size).view(batch_size, -1)
         
@@ -64,7 +64,7 @@ class HoltWintersNoTrend(nn.Module):
 
 class ESRNN(nn.Module):
     
-    def __init__(self, hidden_size=16, slen=12, pred_len=12):
+    def __init__(self, hidden_size=16, slen=24, pred_len=48):
         super(ESRNN, self).__init__()
         
         self.hw = HoltWintersNoTrend(init_a=0.1, init_g=0.1)
@@ -75,10 +75,10 @@ class ESRNN(nn.Module):
         
     def forward(self, series, shifts):
         batch_size = series.shape[0]
-        result, smoothed_value, smoothed_season = self.hw(series, shifts, rv=True, n_preds=0)
+        result, smoothed_level, smoothed_season = self.hw(series, shifts, rv=True, n_preds=0)
         
-        de_season = series - smoothed_season
-        de_level = de_season - smoothed_value
+        de_season = series / smoothed_season
+        de_level = de_season / smoothed_level
         noise = torch.randn(de_level.shape[0], de_level.shape[1])
         noisy = de_level  # +noise
         noisy = noisy.unsqueeze(2)
@@ -89,4 +89,4 @@ class ESRNN(nn.Module):
         season_forecast = [smoothed_season[:, i % self.slen] for i in range(self.pred_len)]
         season_forecast = torch.stack(season_forecast, dim=1)
         
-        return smoothed_value[:, -1].unsqueeze(1) + season_forecast + pred
+        return smoothed_level[:, -1].unsqueeze(1) * season_forecast * pred
