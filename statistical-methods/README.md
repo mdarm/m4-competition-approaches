@@ -6,6 +6,10 @@ The notebook contains implementations of the following purely statistical method
 - Naive 2
 - Arima
 
+## Dataset
+
+Dataset of choice was the yearly time-series and therefore it has been automated as such. For other datasets, eg hourly, some minor fiddling might be required.
+
 ## Method description
 
 - Naive 1: simply picks the last value of the training set, replicates it, forming a horizontal line.
