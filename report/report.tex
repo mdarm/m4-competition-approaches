@@ -4,7 +4,7 @@
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
-\usepackage{graphicx}
+\usepackage{graphicx,booktabs}
 \usepackage{textcomp,url,hyperref}
 \hypersetup{
     colorlinks=true,
@@ -71,15 +71,35 @@ The subsequent sections will summarise each implementation, showcasing the metho
 
 \section{Forecasting Implementations}
 
+The M4 competition\cite{m4} utilised the average of two of the most widely recognized accuracy measures, which are jointly referred to as the overall weighted average (OWA). This approach enhanced the evaluations' objectivity. The chosen measures for were the symmetric mean absolute percentage error (sMAPE) and the mean absolute scaled error (MASE). The methods' performances in terms of the accuracy of PFs can be seen in Table~\ref{tab:metrics}
+
+\begin{table}[h]
+\centering
+\caption{Overall M4-Performances of Implementations\cite{m4}}\label{tab:metrics}
+\begin{tabular}{lccc}
+\toprule
+Method & OWA & sMAPE & MASE \\
+\midrule
+ES-RNN & 0.899 & 12.555 & 0.898 \\
+CNN & 0.920 & 13.434 & 0.920 \\
+MLP Benchmark & 0.920 & 13.434 & 0.920 \\
+Naive 1 & 1.000 & 14.073 & 1.000 \\
+Naive 2 & 0.920 & 13.434 & 0.920 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+It is important to note that our implementations were not direct replications of the original methodologies and were not subjected to testing across all available datasets. As such, there were variations in performance outcomes when compared to the original methods.
+
 \subsection{Convolutional Neural Networks}
 
 The primary objective here was to train and predict using the original Btrotta models\cite{cnn} for forecasting. The original models were designed to capture trends and seasonalities of time series for different frequencies without manually extracting characteristics. The convolutional kernels are believed to capture seasonality patterns, with 3 filters used for each convolutional layer. Different models were constructed for each frequency, horizon time step, and training length.
 
 \subsubsection{Preprocessing and Experiments}
 
-The original implementation suggests that recent time-series-observations are crucial. Training lengths were, therefore, selected based on the end of the training data and were multiples of all the frequencies that the series might exhibit. For series with insufficient data, synthetic data was generated to maintain periodic patterns. The standard approach of subtracting the mean and dividing by the standard deviation was employed for standardisation. For series with not enough samples, the series were duplicated and shifted backward one step, creating a series of the same length.
+The original implementation suggests that recent time-series-observations are crucial. Training lengths were, therefore, selected based on the end of the training data and were multiples of all the frequencies that the series might exhibit. For series with insufficient data, synthetic data was generated to maintain periodic patterns. The standard approach of subtracting the mean and dividing by the standard deviation was employed for standardisation. For series with not enough samples, the series were duplicated and shifted backward one step, creating a series of the same length. Indicative results were those of quarterly and yearly predictions which yielded \textit{MASE: 1.23, 2.81} and \textit{sMAPE: 9.04, 10.62} respectively.
 
-The results indicate that in most cases, the newly designed models performed similarly or better than the original models. This suggests that the naive forecast might be modeling some of the series' underlying patterns. For the yearly frequencies, the new models, which applied pooling and convolutional filters, performed similarly or better, indicating potential patterns in the yearly series. The monthly frequency benefited from the inclusion of naive forecasts in the results. For the daily frequency, a training length of 364 days was added, which seemed to enhance performance, suggesting that a longer history might help identify potential periodic events.
+In most cases, the newly designed models performed similarly or better than the original models. This suggests that the naive forecast might be modeling some of the series' underlying patterns. For the yearly frequencies, the new models, which applied pooling and convolutional filters, performed similarly or better, indicating potential patterns in the yearly series. The monthly frequency benefited from the inclusion of naive forecasts in the results. For the daily frequency, a training length of 364 days was added, which seemed to enhance performance, suggesting that a longer history might help identify potential periodic events.
 
 Multi-step convolutional models were also trained on varying lengths but did not yield optimal results.
 
@@ -92,6 +112,8 @@ The model here, based on the MLP Benchmark\cite{mlp}, consisted of an input laye
 Before feeding the data into the MLP model, several preprocessing steps were undertaken. The time series data was initially loaded and processed to handle any missing values. Trends and seasonality, especially for non-yearly frequencies, were removed. Essential time-centric details, such as the days of the week for hourly datasets, were integrated using one-hot encoding techniques. Furthermore, the dataset underwent scaling to achieve normalisation, and subsequently, input sequences paired with their corresponding target values were generated.
 
 While the training loss and MAE showed promising results in the initial epoch, they began to decline in the following epochs, hinting at potential overfitting. This observation was further verified by the validation metrics, which also exhibited a deteriorating trend as training advanced. The test evaluation outcomes mirrored the validation set's trend, suggesting that the model might not have generalised effectively. Varying model architectures were experimented with while and hyperparameters were tuned. Implementation of "time embeddings" or "time encoding," was also tried. This last technique encoded time-related information into a continuous vector, capturing cyclic patterns like daily, weekly, or yearly variations, in the hope of boosting forecasting accuracy.
+
+Performing all the above on the hoursly dataset, yielded an \textit{OWA} score of $0.70$.
 
 \subsection{Exponential Smoothing with Recurrent Neural Networks}
 
@@ -115,13 +137,13 @@ Since the model no longer considers local linear trend, Equation \ref{eq:trend} 
 
 $X_t$ is a vector of normalized, de-seasonalised features of which a scalar component $x_t$ is calculated via Equation \ref{eq:x}.
 
-The performed implementation was not the same as that Slawek's\cite{esrnn}. Particularly, it did not handle many time series at once, the L1-metric was used as loss function, and a GRU layer was used instead of the LSTM ones.
+The performed implementation was not the same as that of Slawek's\cite{esrnn}. Particularly, it did not handle many time series at once, the L1-metric was used as loss function, and a GRU layer was used instead of the LSTM ones.
 
 \subsubsection{Preprocessing and Experiments}
 
-The data preprocessing focused on ensuring that the time series data is clean and ready for modeling. Trailing NaN-values were removed while the remaining missing values in the series were interpolated using a linear method to ensure continuity. Additionally random shifts in the input data were performed to generate more diverse training samples.
+During the data preprocessing, trailing NaN-values were removed while the remaining missing values in the series were interpolated using a linear method to ensure continuity. Additionally random shifts in the input data were performed to generate more diverse training samples.
 
-Experiments were performed only on the hourly dataset yielding results subpar of the original implementation's. This is to be expected. Slawek's\cite{esrnn} architecture was much more complex, trained in the entirety of the dataset, at once, and had additional components (LSTM and dialated RNN layers) that captured time series patterns better. Slawek also used ensembling techniques to achieve his competition-winning results.
+Experiments were performed only on the hourly dataset yielding results subpar of the original implementation's (\textit{OWA: 1.67, MASE: 1.20, sMAPE: 15.67}.This is to be expected. Slawek's\cite{esrnn} architecture was much more complex, trained in the entirety of the dataset, at once, and had additional components (LSTM and dialated RNN layers) that captured time series patterns better. Slawek also used ensembling techniques to achieve his competition-winning results.
 
 \subsection{Naïve 1, 2 \& S and ARIMA}
 
@@ -129,13 +151,13 @@ Four models, in their varying degrees of simplicity and complexity, served as a 
 
 \subsubsection{Preprocessing and Experiments}
 
-The three Naïve models were grounded in a fundamental assumption: the most recent data points held the highest predictive power\cite{statistical}. Despite their simplicity, they surprisingly outperformed the more sophisticated ARIMA(p,d,q) for several data series. One plausible explanation for this could be the introduction of persistent upward or downward trends when consecutive differences were taken into account. Such trends might not always align with the actual data, which could end or reverse its direction, leading to increased errors. Additionally, any missing data within the series was interpolated to ensure continuity and accuracy.
+The three Naïve models were grounded in a fundamental assumption: the most recent data points held the highest predictive power\cite{statistical}. Despite their simplicity, they surprisingly outperformed the more sophisticated ARIMA(p,d,q) for several data series.  One plausible explanation for this could be the introduction of persistent upward or downward trends when consecutive differences were taken into account. Such trends might not always align with the actual data, which could end or reverse its direction, leading to increased errors. Additionally, any missing data within the series was interpolated to ensure continuity and accuracy.
 
-While Naive S and 2 retained the core principle of relying on recent values, they introduced slight complexities. Naive S, rather than just replicating the last known data point, replicated a set period 'S' of them. This modification led to a notable improvement in performance, with error reductions ranging between 10-37\% compared to Naive 1. On the other hand, Naive 2 operated similarly to Naive 1 but necessitated some pre-processing steps. However, its performance enhancements over Naive 1 were modest. Intriguingly, for approximately 30\% of the yearly data series, Naive 2's performance lagged behind that of Naive 1.
+While Naive S and 2 retained the core principle of relying on recent values, they introduced slight complexities. Naive S, rather than just replicating the last known data point, replicated a set period 'S' of them. This modification led to a notable improvement in performance, with \textit{sMAPE} reductions ranging between 10-37\% compared to Naive 1. On the other hand, Naive 2 operated similarly to Naive 1 but necessitated some pre-processing steps. However, its performance enhancements over Naive 1 were modest. Intriguingly, for approximately 30\% of the yearly data series, Naive 2's \textit{sMAPE} lagged behind that of Naive 1.
 
 \section{Findings and Further Discussion}
 
-Both CNN and MLP are categorised under machine learning methods. As per the M4-competition results\cite{m4-resutls}, the six pure ML methods submitted in the M4 generally underperformed, with none surpassing the accuracy of Comb and only one outperforming Naïve2. This can be attributed to the nature of machine learning methods, particularly deep learning ones like CNNs, which require a substantial amount of data for training. The time series data in forecasting competitions might not always be sufficient for such models, and there is always a risk of these models overfitting if they are not adequately regularised.
+Both CNN and MLP are categorised under machine learning methods. As per the M4-competition results\cite{m4-results}, the six pure ML methods submitted in the M4 generally underperformed, with none surpassing the accuracy of Comb and only one outperforming Naïve2. This can be attributed to the nature of machine learning methods, particularly deep learning ones like CNNs, which require a substantial amount of data for training. The time series data in forecasting competitions might not always be sufficient for such models, and there is always a risk of these models overfitting if they are not adequately regularised.
 
 Conversely, the ES-RNN hybrid approach, which emerged as the competition's winner, stood out and caught everyone by surprise. This approach, which seamlessly integrated both statistical and ML features, not only produced the most accurate forecasts but also the most precise PIs, outperforming the combination benchmark by nearly 10\%.
 
