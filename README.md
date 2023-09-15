@@ -88,7 +88,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 		- [x] Implement code in PyTorch
 		- [x] Take notes on results and assess overall approach
 		- [x] Create `README.md` part               
-- [ ] **Putting it all together**
+- [x] **Putting it all together**
 	- [x] Find suitable LaTeX template (Michael)
 	- [x] Configure `README.md`
 		- [x] Instructions to run locally	
