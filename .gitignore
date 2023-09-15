@@ -1,6 +1,7 @@
 ## Python stuff
 __pycache__
 outputs
+output
 
 ## virtualenv
 .venv
