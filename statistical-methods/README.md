@@ -10,7 +10,7 @@ The notebook contains implementations of the following purely statistical method
 
 - Naive 1: simply picks the last value of the training set, replicates it, forming a horizontal line.
 - Naive S: picks the last $S$ values of the training set and replicates them in the same order.
-- Naive 2: similar approach to Naive 1; however, data are first checked for any seasonality, then adjusted based on their multiplicative seasonal component.
+- Naive 2: similar approach to Naive 1; however, data are first checked for any seasonality through autocorrelation, then adjusted given their multiplicative seasonal component.
 - Arima(p, d, q): finds best fit for (p, d, q):
   - p: AR order is picked based on the strongest partial autocorrelation components
   - d: Differences order is picked based on successive ADF tests; experimentation stops when p-value drops below 5%
