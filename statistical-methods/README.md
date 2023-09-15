@@ -8,7 +8,7 @@ The notebook contains implementations of the following purely statistical method
 
 ## Dataset
 
-Dataset of choice was the yearly time-series and therefore it has been automated as such. For other datasets, eg hourly, some minor fiddling might be required.
+Dataset of choice was the yearly time-series and therefore it has been automated as such. For other datasets, eg hourly, some minor fiddling *might* be required.
 
 ## Method description
 
