@@ -8,17 +8,11 @@ class HoltWintersNoTrend(nn.Module):
     def __init__(self, init_a=0.1, init_g=0.1, slen=24):
         super(HoltWintersNoTrend, self).__init__()
         
-        # Smoothing parameters
+        # Holt-Winters trainable parameters
         self.alpha = nn.Parameter(torch.tensor(init_a))
         self.gamma = nn.Parameter(torch.tensor(init_g))
-        
-        # Initial parameters
         self.init_season = nn.Parameter(torch.tensor(np.random.random(size=slen)))
-        
-        # Season length used to pick appropriate past season step
         self.slen = slen
-        
-        # Sigmoid used to normalize the parameters to be between 0 and 1 if needed
         self.sig = nn.Sigmoid()
         
     def forward(self, series, series_shifts, n_preds=48, rv=False):
@@ -74,13 +68,12 @@ class ESRNN(nn.Module):
         self.slen = slen
         
     def forward(self, series, shifts):
-        batch_size = series.shape[0]
-        result, smoothed_level, smoothed_season = self.hw(series, shifts, rv=True, n_preds=0)
+        _, smoothed_level, smoothed_season = self.hw(series, shifts, rv=True, n_preds=0)
         
         de_season = series / smoothed_season
         de_level = de_season / smoothed_level
-        noise = torch.randn(de_level.shape[0], de_level.shape[1])
-        noisy = de_level  # +noise
+        #noise = torch.randn(de_level.shape[0], de_level.shape[1])
+        noisy = de_level #+ noise
         noisy = noisy.unsqueeze(2)
         
         feature = self.rnn(noisy)[1].squeeze()
@@ -88,5 +81,5 @@ class ESRNN(nn.Module):
         
         season_forecast = [smoothed_season[:, i % self.slen] for i in range(self.pred_len)]
         season_forecast = torch.stack(season_forecast, dim=1)
-        
+       
         return smoothed_level[:, -1].unsqueeze(1) * season_forecast * pred
