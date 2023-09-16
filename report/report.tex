@@ -103,9 +103,9 @@ In most cases, the newly designed models performed similarly or better than the 
 
 Multi-step convolutional models were also trained on varying lengths but did not yield optimal results.
 
-\subsection{Multi-Layer Perceptrons}
+\subsection{Multi-Layer Perceptron}
 
-The model here, based on the MLP Benchmark\cite{mlp}, consisted of an input layer, a hidden layer, and an output layer. Early stopping was employed during the training phase to avert overfitting. The model's efficacy was gauged using performance metrics like Mean Squared Error (MSE) and Mean Absolute Error (MAE).
+The model here, based on the MLP Benchmark\cite{mlp}, consisted of an input layer, a hidden layer, and an output layer. Early stopping was employed during the training phase to avert overfitting. The model's efficiency was determined using the Mean Squared Error (MSE) and the Mean Absolute Error (MAE).
 
 \subsubsection{Preprocessing and Experiments}
 
@@ -113,7 +113,7 @@ Before feeding the data into the MLP model, several preprocessing steps were und
 
 While the training loss and MAE showed promising results in the initial epoch, they began to decline in the following epochs, hinting at potential overfitting. This observation was further verified by the validation metrics, which also exhibited a deteriorating trend as training advanced. The test evaluation outcomes mirrored the validation set's trend, suggesting that the model might not have generalised effectively. Varying model architectures were experimented with while and hyperparameters were tuned. Implementation of "time embeddings" or "time encoding," was also tried. This last technique encoded time-related information into a continuous vector, capturing cyclic patterns like daily, weekly, or yearly variations, in the hope of boosting forecasting accuracy.
 
-Performing all the above on the hoursly dataset, yielded an \textit{OWA} score of $0.70$.
+Performing all of the above on the hoursly dataset yielded an \textit{OWA} score of $0.70$.
 
 \subsection{Exponential Smoothing with Recurrent Neural Networks}
 
@@ -143,7 +143,7 @@ The performed implementation was not the same as that of Slawek's\cite{esrnn}. P
 
 During the data preprocessing, trailing NaN-values were removed while the remaining missing values in the series were interpolated using a linear method to ensure continuity. Additionally random shifts in the input data were performed to generate more diverse training samples.
 
-Experiments were performed only on the hourly dataset yielding results subpar of the original implementation's (\textit{OWA: 1.67, MASE: 1.20, sMAPE: 15.67}.This is to be expected. Slawek's\cite{esrnn} architecture was much more complex, trained in the entirety of the dataset, at once, and had additional components (LSTM and dialated RNN layers) that captured time series patterns better. Slawek also used ensembling techniques to achieve his competition-winning results.
+Experiments were performed only on the hourly dataset yielding results subpar of the original implementation's (\textit{OWA: 1.67, MASE: 1.20, sMAPE: 15.67}).This is to be expected. Slawek's\cite{esrnn} architecture was much more complex, trained in the entirety of the dataset, at once, and had additional components (LSTM and dialated RNN layers) that captured time series patterns better. Slawek also used ensembling techniques to achieve his competition-winning results.
 
 \subsection{Naïve 1, 2 \& S and ARIMA}
 
